@@ -383,6 +383,10 @@ public class Jugador {
        return false;
    }
 
+
+   //Mostramos cajon de fichas de cada color, y mostramos la barra.
+
+
     public  ArrayList<String>  MostrarFichasBarra() {
         ArrayList<String> CargarFichasBarraAMostrar = new ArrayList();
         System.out.println("Fichas en la Barra:");

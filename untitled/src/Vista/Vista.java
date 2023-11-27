@@ -1,6 +1,7 @@
 package Vista;
 
 import Controlador.Controlador;
+import Modelo.Dado;
 import Modelo.Jugador;
 import Modelo.Tablero;
 
@@ -22,12 +23,11 @@ public class Vista extends JFrame implements IObserver {
      JTextArea textoTablero;  // Nuevo campo para la referencia al JTextArea
     private JTextField textField;
     Jugador jugador;
+    Dado dado;
 
     private PrintStream outputPrintStream;
     public Vista(Controlador control) {
-        this.tablero = tablero;
         this.controlador = control;
-
         initializeUI();
     }
 
@@ -37,33 +37,11 @@ public class Vista extends JFrame implements IObserver {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(800, 800));
-
         textArea = new JTextArea();
         JScrollPane scrollPane = new JScrollPane(textArea);
         add(scrollPane, BorderLayout.CENTER);
 
-       // textField = new JTextField();
-       // add(textField, BorderLayout.SOUTH);
-
-       // JButton buttonAgregarTexto = new JButton("Agregar Texto");
-       // add(buttonAgregarTexto, BorderLayout.EAST);
-
-
-        /*
-        // Acción del botón
-        buttonAgregarTexto.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Acciones relacionadas con el botón
-                agregarTexto();
-            }
-        });
-
-
-         */
-
-
-        // Botón para dar la bienvenida
+        // Botón para dar a Empezar el juego.
         JButton buttonBienvenida = new JButton("Empezar a Jugar");
         buttonBienvenida.addActionListener(new ActionListener() {
             @Override
@@ -82,6 +60,25 @@ public class Vista extends JFrame implements IObserver {
             }
         });
         add(buttonTirarDados, BorderLayout.EAST);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+
+       // textField = new JTextField();
+       // add(textField, BorderLayout.SOUTH);
+
+       // JButton buttonAgregarTexto = new JButton("Agregar Texto");
+       // add(buttonAgregarTexto, BorderLayout.EAST);
+        /*
+        // Acción del botón
+        buttonAgregarTexto.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Acciones relacionadas con el botón
+                agregarTexto();
+            }
+        });
+         */
 
         /*
         // Botón para cambiar turno
@@ -93,16 +90,88 @@ public class Vista extends JFrame implements IObserver {
             }
         });
         add(buttonCambiarTurno, BorderLayout.NORTH);
-
-
          */
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
-
-
 
     }
+
+
+    public void mostrarMensaje(String mensaje) {
+        textArea.append(mensaje + "\n");
+    }
+
+    public void mostrarError(String error) {
+        textArea.append("Error: " + error + "\n");
+    }
+
+    //Elije una origen mediante de Imput.
+    public int obtenerOrigenDesdeInput() {
+        String input = JOptionPane.showInputDialog(this, "Ingrese el origen:");
+        if (input != null && !input.isEmpty()) {
+            try {
+                //hago un Scroll hacia abajo.
+                // Scroleo_haciaAbajo();
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                mostrarError("Por favor, ingrese un número válido.");
+                //hago un Scroll hacia abajo.
+                // Scroleo_haciaAbajo();
+            }
+        } else {
+            mostrarError("No se ingresó un origen válido.");
+            //hago un Scroll hacia abajo.
+            //Scroleo_haciaAbajo();
+        }
+        //hago un Scroll hacia abajo.
+        //Scroleo_haciaAbajo();
+        return -1; // Valor por defecto si hay un error
+    }
+
+
+//Elije una opcion mediante de Imput.
+    public int elegirOpcion(String jugadorC, int Dado,int  dado2) {
+        String[] opciones = {"Realizar movimiento", "Realizar movimientos separados", "Salir"};
+        int opcionSeleccionada = JOptionPane.showOptionDialog(this, "Seleccione una opción:", " SU TURNO :  "+  jugadorC + " Dado 1: "+Dado +" Dado 2:  "+dado2, JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, opciones, opciones[0]);
+        // Ajustamos el índice de la opción (Java Swing devuelve -1 si se cierra la ventana).
+        if (opcionSeleccionada == -1) {
+            // Si se cierra la ventana, asumimos que el usuario quiere salir.
+            System.exit(0);
+        } else {
+            // Ajustamos el índice de la opción si es diferente de -1.
+            opcionSeleccionada++;
+            if (opciones[opcionSeleccionada - 1].equals("Salir")) {
+                // Cerramos la aplicación.
+                System.exit(0);
+            }
+        }
+        return opcionSeleccionada;
+    }
+
+
+
+
+
+
+    @Override
+    public void update(String message) {
+        textArea.append(message + "\n");
+
+        // Hacer que el scroll baje automáticamente
+        int length = textArea.getDocument().getLength();
+        textArea.setCaretPosition(length);
+        System.out.println("Vista actualizada: " + message);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -118,16 +187,12 @@ public class Vista extends JFrame implements IObserver {
         }
         return textoIngresado;
     }
-
-
     public String agregarTexto() {
         String textoIngresado = textField.getText();
         textArea.append("Texto ingresado: " + textoIngresado + "\n");
         textField.setText("");
         return textoIngresado;
     }
-
-
 
     public int obtenerOrigenDesdeTextField() {
         String textoIngresado = textField.getText();
@@ -149,14 +214,9 @@ public class Vista extends JFrame implements IObserver {
     public int agregarTexto3() {
         String textoIngresado = textField.getText();
         int numero = 49;
-
-
         numero = Integer.parseInt(textoIngresado);
         // Limpia el campo de texto después de agregar el número.
         textField.setText("");
-
-
-
         return numero;
     }
 
@@ -183,45 +243,17 @@ public class Vista extends JFrame implements IObserver {
 
     }
 
-
-
-
+    //Muestra el mensaje en la consola.
     public void mostrarMensajeC(String mensaje) {
       System.out.println(mensaje);
     }
 
+    //Muestra el mensaje ERROR en la consola.
     public void mostrarErrorC(String error) {
        // textArea.append("Error: " + error + "\n");
         System.out.println("Error: " + error + "\n");
     }
-    public void mostrarMensaje(String mensaje) {
-        textArea.append(mensaje + "\n");
-    }
 
-    public void mostrarError(String error) {
-        textArea.append("Error: " + error + "\n");
-    }
-
-    public int elegirOpcion() {
-        String[] opciones = {"Realizar movimiento", "Realizar movimientos separados", "Salir"};
-        int opcionSeleccionada = JOptionPane.showOptionDialog(this, "Seleccione una opción:", " SU TURNO : ", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, opciones, opciones[0]);
-
-        // Ajustamos el índice de la opción (Java Swing devuelve -1 si se cierra la ventana).
-        if (opcionSeleccionada == -1) {
-            // Si se cierra la ventana, asumimos que el usuario quiere salir.
-            System.exit(0);
-        } else {
-            // Ajustamos el índice de la opción si es diferente de -1.
-            opcionSeleccionada++;
-
-            if (opciones[opcionSeleccionada - 1].equals("Salir")) {
-                // Cerramos la aplicación.
-                System.exit(0);
-            }
-        }
-
-        return opcionSeleccionada;
-    }
 
 
     public int elegirOpcionConsola() {
@@ -273,33 +305,6 @@ public class Vista extends JFrame implements IObserver {
 
 
 
-    public int obtenerOrigenDesdeInput() {
-        String input = JOptionPane.showInputDialog(this, "Ingrese el origen:");
-        if (input != null && !input.isEmpty()) {
-            try {
-                //hago un Scroll hacia abajo.
-               // Scroleo_haciaAbajo();
-                return Integer.parseInt(input);
-            } catch (NumberFormatException e) {
-                mostrarError("Por favor, ingrese un número válido.");
-                //hago un Scroll hacia abajo.
-               // Scroleo_haciaAbajo();
-            }
-        } else {
-            mostrarError("No se ingresó un origen válido.");
-            //hago un Scroll hacia abajo.
-            //Scroleo_haciaAbajo();
-        }
-
-        //hago un Scroll hacia abajo.
-        //Scroleo_haciaAbajo();
-        return -1; // Valor por defecto si hay un error
-    }
-
-
-
-
-
     public void setOutputPrintStream(PrintStream outputPrintStream) {
         this.outputPrintStream = outputPrintStream;
     }
@@ -312,15 +317,5 @@ public class Vista extends JFrame implements IObserver {
 
 
 
-    @Override
-    public void update(String message) {
-        textArea.append(message + "\n");
-
-        // Hacer que el scroll baje automáticamente
-        int length = textArea.getDocument().getLength();
-        textArea.setCaretPosition(length);
-
-        System.out.println("Vista actualizada: " + message);
-    }
 
 }

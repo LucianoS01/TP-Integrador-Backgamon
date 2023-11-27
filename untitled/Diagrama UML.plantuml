@@ -1,0 +1,208 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class Backgammon {
+  + Backgammon(Controlador): 
+  + Jugar(): void
+}
+enum Color << enumeration >> {
+  + Color(): 
+  + valueOf(String): Color
+  + values(): Color[]
+}
+class Controlador {
+  + Controlador(Modelo): 
+  - vista: Vista
+  + VerificaJugadorTieneFichaEnBarra(Jugador, Color): boolean
+  + cambiarTurno(): void
+  + validarOpcion(String): int
+  + Cambiarturnito(): void
+  + LanzarDaditosY_Emxezar(): void
+  + Jcolor(Jugador): Color
+  + realizarMovimiento(Jugador, int, int, int): boolean
+  + MostrarCajonesAmbiosJugadores_(Jugador, Jugador): void
+  + DibujarTablero(): void
+  + Jugar(): void
+  + realizarMovimientosSeparados(Jugador, int, int, int, int): boolean
+  + iniciarJuego(): void
+  + actualizarVista(): void
+  + TOdasFichasEncaJon(Jugador): boolean
+  + MostrarFichasBarra(Jugador): void
+  + ColorDelJugadorTurno(Jugador): String
+  + LLevarString(String): String
+   vista: Vista
+}
+class Dado {
+  + Dado(): 
+  + tirar(): int
+}
+class Ficha {
+  + Ficha(Color): 
+  - jugador: Color
+  - posicion: int
+  + mover(int): boolean
+  - movimiento_Valido(int): boolean
+   jugador: Color
+   posicion: int
+}
+interface IObservable << interface >> {
+  + addObserver(IObserver): void
+  + removeObserver(IObserver): void
+  + notifyObservers(String): void
+}
+interface IObserver << interface >> {
+  + update(String): void
+}
+class Jugador {
+  + Jugador(Color): 
+  - color: Color
+  - CajonDeFichas: List<Ficha>
+  - barra: List<Ficha>
+  - fichas: List<Ficha>
+  + getfichasEncajon(): int
+  + MostrarFichasBarra(): ArrayList<String>
+  + Lanzar_Dado(Dado): int
+  + FichasConPosiciones(): List<Ficha>
+  - posicionInicialSegunColor(Color): int
+  + EstaEnBarra(Color): boolean
+  + CasilleroOcupado(int, Color): boolean
+  + MostrarCajonFichas(): ArrayList<String>
+  + Mostrar_fichas_por_color_y_las_posiciones(): void
+  - movimiento_Valido(int): boolean
+  + Cantidad_Fichas_Barra(): int
+  + PuedeComer(int, Color): boolean
+  + TodasFichasEnCajon(): boolean
+   color: Color
+   fichas: List<Ficha>
+   CajonDeFichas: List<Ficha>
+   barra: List<Ficha>
+}
+class Main {
+  + Main(): 
+  + main(String[]): void
+}
+class Modelo {
+  + Modelo(): 
+  - tablero: Tablero
+  + MostrarTableroBarra(Jugador): ArrayList<String>
+  + MostrarCajonesAmbiosJugadores(Jugador, Jugador): ArrayList<String>
+  + turno(): Jugador
+  + McambiarTurno(): Jugador
+  + hayMovimientosSeparados(Jugador, int, int): boolean
+  + colorJugador(Jugador): Color
+  + llamarTablero(): String
+  + PosicionTablero(): int[]
+  + TodasFichasCajon(Jugador): boolean
+  + notifyObservers(String): void
+  + addObserver(IObserver): void
+  + removeObserver(IObserver): void
+  + Cantidad_Fichas_Barra(Jugador): int
+  + Lanzar_Dadoo(Jugador, Dado): int
+  + MDibujarTableroConsalo(): void
+  + MostrarFichasBarra(List<Ficha>): void
+  + Jcolor(Jugador): Color
+  + MRealizarMovimientos(Jugador, int, int, int): boolean
+  + MrealizarMovimientosSeparados(Jugador, int, int, int, int): boolean
+  + HayfichasEnLaBarraDeColor(Jugador, Color): boolean
+   tablero: Tablero
+}
+class Tablero {
+  + Tablero(List<Ficha>, Jugador, Jugador): 
+  - turno: Color
+  - fichas_del_Tablero: List<Ficha>
+  - posiciones: int[]
+  + MayoyA5Posiciones(int, Color): boolean
+  + cambiarTurno(): Jugador
+  + Comioo(Color): Color
+  + dibujarTablero2(): void
+  + actualizarTablero(List<Ficha>): void
+  + CasilleroOcupado(int, Color): boolean
+  + HayMovimientosSeparados(Jugador, int, int): boolean
+  + RealizarMovimientosSeparados(Jugador, int, int, int, int): boolean
+  + mostrarFichasEnTablero(): void
+  + obtenerRepresentacionTablero(): String
+  + RealizarMovimientos(Jugador, int, int, int, int): boolean
+  - ComerFicha(int, Jugador): void
+  + dibujarTablero(): String
+  + mostrarTablero(): void
+  - movimiento_Valido(int): boolean
+  + PuedeComer(int, Color): boolean
+  + esMovimientoValido(Jugador, int, int, int, int): boolean
+  + calcularDestino(int, int, int, Color): int
+  + dibujarTableroo(): String
+   posiciones: int[]
+   turno: Color
+   fichas_del_Tablero: List<Ficha>
+}
+class Vista {
+  + Vista(Controlador): 
+  - outputPrintStream: PrintStream
+  + elegirOpcionConsola(): int
+  + update(String): void
+  + agregarTexto(): String
+  + obtenerOrigenDesdeTextField(): int
+  + mostrarError(String): void
+  + mostrarMensaje(String): void
+  + mostrarErrorC(String): void
+  + obtenerOrigenDesdeInput(): int
+  + Bienvenida(): void
+  + obtenerOrigenDesdeConsola(): int
+  + Final(): void
+  + ValorCambiado(String): void
+  + agregarTexto5(): String
+  - initializeUI(): void
+  + agregarTexto3(): int
+  + mostrarMensajeC(String): void
+  + elegirOpcion(String, int, int): int
+   outputPrintStream: PrintStream
+}
+class VistaJugadorNegro {
+  + VistaJugadorNegro(Controlador): 
+  - outputPrintStream: PrintStream
+  - initializeUI(): void
+  + agregarTexto(): String
+  + update(String): void
+   outputPrintStream: PrintStream
+}
+class ventanita {
+  + ventanita(): 
+}
+
+Backgammon        "1" *-[#595959,plain]-> "controlador\n1" Controlador       
+Backgammon         -[#595959,dashed]->  Dado              : "«create»"
+Backgammon        "1" *-[#595959,plain]-> "jugadorBlanco\n1" Jugador           
+Backgammon         -[#595959,dashed]->  Jugador           : "«create»"
+Backgammon         -[#595959,dashed]->  Tablero           : "«create»"
+Backgammon        "1" *-[#595959,plain]-> "tablero\n1" Tablero           
+Controlador        -[#595959,dashed]->  Dado              : "«create»"
+Controlador       "1" *-[#595959,plain]-> "jugadorBlanco\n1" Jugador           
+Controlador       "1" *-[#595959,plain]-> "modelo\n1" Modelo            
+Controlador       "1" *-[#595959,plain]-> "tablero\n1" Tablero           
+Controlador       "1" *-[#595959,plain]-> "vista\n1" Vista             
+Ficha             "1" *-[#595959,plain]-> "jugador\n1" Color             
+Jugador           "1" *-[#595959,plain]-> "color\n1" Color             
+Jugador           "1" *-[#595959,plain]-> "fichas\n*" Ficha             
+Jugador            -[#595959,dashed]->  Ficha             : "«create»"
+Main               -[#595959,dashed]->  Controlador       : "«create»"
+Main               -[#595959,dashed]->  Modelo            : "«create»"
+Main               -[#595959,dashed]->  Vista             : "«create»"
+Modelo             -[#008200,dashed]-^  IObservable       
+Modelo            "1" *-[#595959,plain]-> "observers\n*" IObserver         
+Modelo             -[#595959,dashed]->  Jugador           : "«create»"
+Modelo            "1" *-[#595959,plain]-> "jugadorBlanco\n1" Jugador           
+Modelo            "1" *-[#595959,plain]-> "tablero\n1" Tablero           
+Modelo             -[#595959,dashed]->  Tablero           : "«create»"
+Tablero           "1" *-[#595959,plain]-> "turno\n1" Color             
+Tablero           "1" *-[#595959,plain]-> "fichas_del_Tablero\n*" Ficha             
+Tablero           "1" *-[#595959,plain]-> "jugadores\n*" Jugador           
+Vista             "1" *-[#595959,plain]-> "controlador\n1" Controlador       
+Vista             "1" *-[#595959,plain]-> "dado\n1" Dado              
+Vista              -[#008200,dashed]-^  IObserver         
+Vista             "1" *-[#595959,plain]-> "jugador\n1" Jugador           
+Vista             "1" *-[#595959,plain]-> "tablero\n1" Tablero           
+VistaJugadorNegro "1" *-[#595959,plain]-> "control\n1" Controlador       
+VistaJugadorNegro  -[#008200,dashed]-^  IObserver         
+@enduml

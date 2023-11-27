@@ -26,34 +26,34 @@ public class Controlador {
         this.jugadorTurno = jugadorTurno;
 
     }
-
-
-
     public void setVista(Vista vista) {
         this.vista = vista;
     }
-
-
-
     public void iniciarJuego() {
         vista.Bienvenida();
         //jugadorTurno = modelo.turno();
         modelo.turno();
+        vista.mostrarMensaje("Turno del jugador " + jugadorTurno.getColor());
+        DibujarTablero();
+        modelo.MostrarFichasBarra(jugadorTurno.getBarra());
+        vista.mostrarMensaje("La cantidad de fichas que hay en la barra del jugador "+ " son:  " + jugadorTurno.getColor() + "  "+ modelo.Cantidad_Fichas_Barra(jugadorTurno));
+       // actualizarVista();
+    }
+    public void Cambiarturnito() {
+      //  modelo.turno();
+        cambiarTurno();
         actualizarVista();
     }
 
-    public void Cambiarturnito() {
-        modelo.turno();
-        actualizarVista();
-    }
 
     public void actualizarVista() {
         DibujarTablero();
-        vista.mostrarMensaje("Turno del jugador " + jugadorTurno.getColor());
+       // vista.mostrarMensaje("Turno del jugador " + jugadorTurno.getColor());
     }
-
     public void LanzarDaditosY_Emxezar(){
+        vista.mostrarMensaje("Turno del jugador " + jugadorTurno.getColor());
         modelo.turno();
+
         Dado dado = new Dado();
         int dado1 = 0;
         int dado2 = 0;
@@ -62,16 +62,16 @@ public class Controlador {
         boolean movimientoExitoso = false;
         //Si hay dobles:
         if (dado1 == dado2){
-            dado1 = dado1 *2;
+            dado1 = dado1 * 2;
             dado2 = dado2 * 2;
             vista.mostrarMensaje("Hubo Dobles se multiplican los dados!!"+ "\n");
         }
         vista.mostrarMensaje("El jugador : " + ColorDelJugadorTurno(jugadorTurno)  + ", Lanzo: " + dado1);
         vista.mostrarMensaje("El jugador : " + ColorDelJugadorTurno(jugadorTurno)  + ", Lanzo: " + dado2);
         vista.mostrarMensajeC("Dado 1: " + dado1 + ", Dado 2: " + dado2);
-        vista.mostrarMensaje("Dado 1: " + dado1 + ", Dado 2: " + dado2);
+      //  vista.mostrarMensaje("Dado 1: " + dado1 + ", Dado 2: " + dado2);
 
-        int opcion = vista.elegirOpcion();
+        int opcion = vista.elegirOpcion(ColorDelJugadorTurno(jugadorTurno) ,dado1,dado2);
         int origen;
         if ((opcion == 1 ) || !modelo.hayMovimientosSeparados(jugadorTurno, dado1, dado2)) {
             vista.mostrarMensajeC("Origen: ");
@@ -81,7 +81,7 @@ public class Controlador {
             int sumaDados = dado1 + dado2;
             movimientoExitoso = realizarMovimiento(jugadorTurno, origen, dado1, dado2);
         } else if (opcion == 2 )  {
-            vista.mostrarMensajeC("Origen Dado 1: ");
+           // vista.mostrarMensajeC("Origen Dado 1: ");
             vista.mostrarMensaje(" Ingrese el Origen  para el Dado 1: ");
             int origenDado1 = vista.obtenerOrigenDesdeInput();
             vista.mostrarMensaje(" Se ha ingresador la poscion de origen : " + origenDado1);
@@ -98,36 +98,29 @@ public class Controlador {
             //  int sumaDados = dado1 + dado2;
             // movimientoExitoso = realizarMovimiento(jugadorTurno, origen, dado1, dado2);
         }
-        MostrarFichasBarra(jugadorTurno);
-        DibujarTablero();
+
         if (!movimientoExitoso) {
             vista.mostrarError("ERROR Movimiento inválido. Intenta de nuevo.");
             vista.mostrarErrorC("ERROR Movimiento inválido. Intenta de nuevo.");
         }
-
         else {
-            vista.mostrarMensaje("Se cambio el turno ");
-            cambiarTurno();
+            modelo.MostrarFichasBarra(jugadorTurno.getBarra());
+            vista.mostrarMensaje("La cantidad de fichas que hay en la barra son:  " + modelo.Cantidad_Fichas_Barra(jugadorTurno));
+            vista.mostrarMensaje("La caja del Jugador " + Jcolor(jugadorTurno) + " contiene: " + jugadorTurno.getfichasEncajon());
+            vista.mostrarMensajeC("La caja del Jugador " + Jcolor(jugadorTurno) + " contiene: " + jugadorTurno.getfichasEncajon());
+           // vista.mostrarMensaje("Se cambio el turno ");
+            Cambiarturnito();
+            //DibujarTablero();
         }
-
-        modelo.MostrarFichasBarra(jugadorTurno.getBarra());
-        vista.mostrarMensaje("La cantidad de fichas que hay en la barra son:  " + modelo.Cantidad_Fichas_Barra(jugadorTurno));
-        vista.mostrarMensaje("La caja del Jugador " + Jcolor(jugadorTurno) + " contiene: " + jugadorTurno.getfichasEncajon());
-        vista.mostrarMensajeC("La caja del Jugador " + Jcolor(jugadorTurno) + " contiene: " + jugadorTurno.getfichasEncajon());
-        if (!modelo.TodasFichasCajon(jugadorTurno)) {
+        if (modelo.TodasFichasCajon(jugadorTurno)) {
             vista.Final();
         }
+       // MostrarFichasBarra(jugadorTurno);
 
     }
 
-
-    private void LanzarDadosJugador(){
-
-    }
 
     //---------------------------------------------------------------------------------
-
-
 
     //Jugar funciona pero es un gameloop.
     public void Jugar() {
@@ -167,7 +160,7 @@ public class Controlador {
                // int opcion = vista.elegirOpcion();
                // int opcion = vista.elegirOpcionConsola();
                 String cadena = vista.agregarTexto5();
-                int opcion = vista.elegirOpcion();
+                int opcion = vista.elegirOpcion(ColorDelJugadorTurno(jugadorTurno) ,dado1,dado2);
                 //hago un Scroll hacia abajo.
                 //vista.Scroleo_haciaAbajo();
                 int origen;
@@ -258,8 +251,10 @@ public class Controlador {
         return modelo.Jcolor(jugador);
     }
 
-    public Color ColorDelJugadorTurno(Jugador jugador){
-       return   modelo.colorJugador(jugador);
+    public String ColorDelJugadorTurno(Jugador jugador){
+       String S;
+       S = modelo.colorJugador(jugador).toString();
+       return S;
     }
     public boolean TOdasFichasEncaJon(Jugador jugadorr){
         return modelo.TodasFichasCajon(jugadorr);
@@ -280,7 +275,6 @@ public class Controlador {
        jugadorTurno =  modelo.McambiarTurno();
     }
 
-
     public void MostrarFichasBarra(Jugador juga){
         vista.mostrarMensaje("MuestaBarraDeFichasComidas:  ");
         for (String FichasBarra :  modelo.MostrarTableroBarra(juga)) {
@@ -289,7 +283,6 @@ public class Controlador {
         }
 
     }
-
     public void MostrarCajonesAmbiosJugadores_(Jugador j1, Jugador j2){
         vista.mostrarMensaje("Muestra Los 2 cajones del tablero:  ");
         for (String FichasCajon :  modelo.MostrarCajonesAmbiosJugadores(j1,j2)) {
@@ -302,20 +295,6 @@ public class Controlador {
     public void DibujarTablero(){
         modelo.llamarTablero();
     }
-
-
-/*
-    public void CVerSiFuncion(){
-        String l;
-        l = modelo.VerSiFuncion();
-
-        vista.mostrarMensaje("MUESTRA:  " + l);
-
-    }
-
- */
-
-
 
 
 }

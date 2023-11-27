@@ -82,20 +82,19 @@ public class Tablero {
                 break;
             }
         }
-
         boolean EntroCajon = false;
-
         if (ficha != null) {
-
-
+            // Verificamos que la ficha que selecciono el usuario no sea del reival.
+            if (ficha.getJugador() != jugador.getColor()) {
+                System.out.println("La ficha seleccionada no pertenece al jugador actual.");
+                return false;
+            }
             int destino = calcularDestino(origen, dado1, dado2, jugador.getColor());
 
            // int destino = SumaDados;
 
             // Verifica si el movimiento es válido.
             if (esMovimientoValido(jugador,origen,destino, dado1, dado2)) {
-
-
                 // Verifica si hay una ficha del oponente en el destino.
                 if (PuedeComer(destino, jugador.getColor())) {
                     Ficha fichaAComer = null;
@@ -112,33 +111,19 @@ public class Tablero {
                         jugador.getBarra().add(fichaAComer);
                         fichas_del_Tablero.remove(fichaAComer);
                     }
-
                     ficha.mover(dado1 + dado2);
-
                     //comio = true;
                    // Comioo(fichaAComer.getJugador());
                     System.out.println("Modelo.Ficha  " + posicionFicha + "Del jugador color " + fichaAComer.getJugador()  + " enviada a la barra.");
-
                 } else {
                     // Realiza el movimiento normal.
                     ficha.mover(dado1 + dado2);
-
                     // Avisa cuando se agrega al cajón!!.
                     if ((ficha.getPosicion() == 25 || ficha.getPosicion() == 0) && jugador.getColor() == Color.NEGRAS) {
                         // Modelo.Ficha negra ha salido del tablero.
                         jugador.getCajonDeFichas().add(ficha);
                         jugador.getFichas().remove(ficha);
                         System.out.println("Se agregó una ficha al cajón de Negras.");
-                        /*
-                        EntroCajon = true;
-                        if (FuncionEntro(EntroCajon)){
-                            return EntroCajon;
-                        }
-                        EntroCajon = false;
-
-
-                         */
-
 
                     } else if ((ficha.getPosicion() == 25 || ficha.getPosicion() == 0) && jugador.getColor() == Color.BLANCAS) {
                         // Modelo.Ficha blanca ha salido del tablero.
@@ -148,21 +133,17 @@ public class Tablero {
                     } else {
                         System.out.println("Movimiento exitoso desde el punto " + origen + " al punto " + ficha.getPosicion() + ".");
                     }
-
                     jugador.MostrarFichasBarra();
                     System.out.println("La cantidad de fichas en las barras son: " + jugador.Cantidad_Fichas_Barra());
                     System.out.println("las fichas que estan en la barra son: ");
                     jugador.MostrarFichasBarra();
-
                 }
-
                 return true;
             } else {
                 System.out.println("Movimiento inválido desde el punto " + origen + ".");
                 return false;
             }
         } else {
-
             System.out.println("No hay fichas en el punto de origen " + origen + ".");
             return false;
         }
@@ -297,8 +278,8 @@ public class Tablero {
         int l = 1;
         // Construye la representación del tablero como una cadena.
         StringBuilder tableroString = new StringBuilder();
+        tableroString.append("******************************* " + "\n");
         for (int i = 0; i < posiciones.length; i++) {
-
             if (i == 6 || i == 12  || i == 18 ){
                 tableroString.append("* * * Cuadrante: "+ l + "\n");
                 l = l + 1;
@@ -318,6 +299,7 @@ public class Tablero {
             tableroString.append("\n"); // Salto de línea después de cada punto.
         }
         tableroString.append("* * * Cuadrante: "+ l + "\n");
+        tableroString.append("******************************* ");
         // Retorna la cadena representando el tablero.
        // return tableroString.toString();
 
@@ -377,10 +359,8 @@ public class Tablero {
         }
         return false ;
     }
-
-
+    /*/
     public boolean CasilleroOcupado(int posicion, Color colorficha){
-
         Color colorrival;
         int CanidadDeFichas = 0;
         if (colorficha == Color.BLANCAS){
@@ -400,53 +380,97 @@ public class Tablero {
             }
         }
         return false ;
-
     }
 
 
+     */
+
+    public boolean CasilleroOcupado(int posicion, Color colorficha) {
+        Color colorrival;
+        int CantidadDeFichas = 0;
+
+        if (colorficha == Color.BLANCAS) {
+            colorrival = Color.NEGRAS;
+        } else {
+            colorrival = Color.BLANCAS;
+        }
+
+        int CantidadFichasColorPropio = 0;
+
+        for (Ficha ficha : fichas_del_Tablero) {
+            if (posicion == ficha.getPosicion()) {
+                if (ficha.getJugador() == colorrival) {
+                    CantidadDeFichas++;
+                    if (CantidadDeFichas > 1) {
+                        return true;
+                    }
+                }
+
+                if (ficha.getJugador() == colorficha) {
+                    CantidadFichasColorPropio++;
+                }
+            }
+        }
+
+        // Condición adicional para verificar si hay más de 5 fichas propias en la posición.
+        if (CantidadFichasColorPropio >= 5) {
+            return true;
+        }
+
+        return false;
+    }
     public boolean esMovimientoValido(Jugador jugador, int origen,int destino,int dado1, int dado2) {
-
-
         // Verificar que el destino esté dentro del rango de puntos del tablero.
         if (origen < 0 || origen > 25) {
             return false;
         }
-
         if (CasilleroOcupado(destino,jugador.getColor())){
-            System.out.println("El casillero esta ocupado por el rivarl: ");
+            System.out.println("El casillero esta ocupadito  por el rivarl: ");
             return false;
-
         }
-
+        //Mayor a 5 posiciones;
+       if ( MayoyA5Posiciones(destino,jugador.getColor())){
+           System.out.println(" Error Ya pasaron las 5 Posiciones: ");
+           return false;
+       }
         int PosicionFinal;
         if (jugador.getColor() == Color.NEGRAS){
             PosicionFinal = origen + (dado1 + dado2);
         }else {
             PosicionFinal = origen - (dado1 + dado2);
         }
-
         if (movimiento_Valido(PosicionFinal)){
             return true;
         }
         else{
             return false;
         }
-
         // Si todas las validaciones pasan, el movimiento es válido.
-
     }
 
     private boolean movimiento_Valido(int PosicionFinal){
         return PosicionFinal >= 0 && PosicionFinal <= 25;
     }
 
+    public boolean MayoyA5Posiciones(int posicion, Color colorficha){
+        int CanidadDeFichas = 0;
+        for (Ficha ficha : fichas_del_Tablero) {
+            if ( posicion == ficha.getPosicion() && ficha.getJugador() == colorficha){
+                CanidadDeFichas = CanidadDeFichas + 1;
+                if (CanidadDeFichas > 5){
+                    return true;
+                }
+            }
+        }
+        return false ;
+
+    }
+
 
     public int calcularDestino(int origen, int dado1, int dado2, Color colorDelJugador) {
         int sumaDeDados = dado1 + dado2;
-
         if (colorDelJugador == Color.BLANCAS){
             return  origen - sumaDeDados;
-
         }else {
             return  origen + sumaDeDados;
         }
@@ -456,7 +480,6 @@ public class Tablero {
 
     public boolean HayMovimientosSeparados(Jugador jugador, int dado1, int dado2) {
         List<Ficha> fichas = jugador.getFichas();
-
         // Itera sobre todas las combinaciones posibles de fichas y movimientos
         for (Ficha ficha1 : fichas) {
             for (Ficha ficha2 : fichas) {
@@ -469,7 +492,6 @@ public class Tablero {
                 }
             }
         }
-
         return false;
     }
 
@@ -519,12 +541,9 @@ public class Tablero {
      */
 
 
-
-
     public boolean RealizarMovimientosSeparados(Jugador jugador, int origen1, int origen2, int dado1, int dado2) {
         Ficha ficha1 = null;
         Ficha ficha2 = null;
-
         // Busca las fichas en los puntos de origen.
         for (Ficha f : fichas_del_Tablero) {
             if (f.getPosicion() == origen1) {
@@ -533,31 +552,31 @@ public class Tablero {
                 ficha2 = f;
             }
         }
-
         // Verifica si las fichas existen y si los movimientos son válidos.
         if (ficha1 != null && ficha2 != null) {
+
+            // Verificamos que la ficha que selecciono el usuario no sea del reival.
+            if (ficha1.getJugador() != jugador.getColor() || ficha2.getJugador() != jugador.getColor() ) {
+                System.out.println("La ficha seleccionada no pertenece al jugador actual.");
+                return false;
+            }
             int destino1 = calcularDestino(origen1, dado1, dado2, jugador.getColor());
             int destino2 = calcularDestino(origen2, dado1, dado2, jugador.getColor());
-
             // Verifica que ambos movimientos sean válidos.
             if (esMovimientoValido(jugador, origen1, destino1, dado1, dado2) && esMovimientoValido(jugador, origen2, destino2, dado1, dado2)) {
                 // Realiza los movimientos.
                 ficha1.mover(dado1);
                 ficha2.mover(dado2);
-
                 // Verifica si hay fichas del oponente en los destinos.
                 if (PuedeComer(destino1, jugador.getColor())) {
                     ComerFicha(destino1, jugador);
                 }
-
                 if (PuedeComer(destino2, jugador.getColor())) {
                     ComerFicha(destino2, jugador);
                 }
-
                 // Muestra información sobre los movimientos realizados.
                 System.out.println("Movimiento exitoso desde el punto " + origen1 + " al punto " + ficha1.getPosicion() + ".");
                 System.out.println("Movimiento exitoso desde el punto " + origen2 + " al punto " + ficha2.getPosicion() + ".");
-
                 return true;
             } else {
                 System.out.println("Movimientos inválidos desde los puntos " + origen1 + " y " + origen2 + ".");
@@ -584,10 +603,7 @@ public class Tablero {
             jugador.getBarra().add(fichaAComer);
             fichas_del_Tablero.remove(fichaAComer);
         }
-
         System.out.println("Ficha en el punto " + posicionFicha + " del jugador " + jugador.getColor() + " enviada a la barra.");
     }
-
-
 
 }

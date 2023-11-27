@@ -9,15 +9,9 @@ public class Modelo implements IObservable {
     Jugador jugadorNegro;
     //private ArrayList <Modelo.Observer> observadores;
     private List<IObserver> observers = new ArrayList<>();
-
-
-
     public Modelo() {
         Jugador jugadorBlanco = new Jugador(Color.BLANCAS);
         Jugador jugadorNegro = new Jugador(Color.NEGRAS);
-
-
-
         List<Ficha> FichasParaElTablero = new ArrayList<>();
         FichasParaElTablero.addAll(jugadorNegro.FichasConPosiciones());
         FichasParaElTablero.addAll(jugadorBlanco.FichasConPosiciones());
@@ -26,33 +20,47 @@ public class Modelo implements IObservable {
         this.jugadorBlanco = jugadorBlanco;
         this.jugadorNegro = jugadorNegro;
         this.tablero = tablero;
-
     }
-
     public Tablero getTablero() {
         return tablero;
     }
-
-
-
-
 
     public  Jugador turno(){
         return (tablero.getTurno() == Color.BLANCAS) ? jugadorBlanco : jugadorNegro;
     }
     public boolean MRealizarMovimientos(Jugador jugador, int origen, int dado1, int dado2) {
-        return tablero.RealizarMovimientos(jugador,origen,dado1, dado2, dado1 + dado2);
+        boolean b = tablero.RealizarMovimientos(jugador,origen,dado1, dado2, dado1 + dado2);
+        if (b){
+            if(jugador.getColor() == Color.BLANCAS){
+                notifyObservers("Movimiento exitoso desde el punto " + origen + " al punto "+ (origen - (dado1 + dado2)) + ".");
+            }
+            else{
+                notifyObservers("Movimiento exitoso desde el punto " + origen + " al punto "+ (origen + (dado1 + dado2)) + ".");
+            }
+
+        }
+        return b;
     }
 
     public boolean MrealizarMovimientosSeparados(Jugador jugador, int origen1, int origen2, int dado1, int dado2) {
-        return tablero.RealizarMovimientosSeparados(jugador, origen1, origen2, dado1, dado2);
+        boolean b = tablero.RealizarMovimientosSeparados(jugador, origen1, origen2, dado1, dado2);
+        if (b){
+            if(jugador.getColor() == Color.BLANCAS){
+                notifyObservers("Movimiento exitoso desde el punto " + origen1 + " al punto " + (origen1 - dado1) + ".");
+                notifyObservers("Movimiento exitoso desde el punto " + origen2 + " al punto " + (origen2 - dado2) + ".");
+            }
+            else {
+                notifyObservers("Movimiento exitoso desde el punto " + origen1 + " al punto " + (origen1 + dado1) + ".");
+                notifyObservers("Movimiento exitoso desde el punto " + origen2 + " al punto " + (origen2 + dado2) + ".");
+            }
+
+        }
+        return b;
     }
 
     //Mostramos la barra.
    public ArrayList<String> MostrarTableroBarra(Jugador jugador){
-
        return jugador.MostrarFichasBarra();
-
    }
 
    //Mostrar Cajones de Jugador;
@@ -60,39 +68,18 @@ public class Modelo implements IObservable {
         ArrayList<String> resultado = new ArrayList<>();
         ArrayList<String> CajonNegro = new ArrayList();
         ArrayList<String> CajonBlanca = new ArrayList();
-
         // Mostrar cajón de jugador1
         resultado.add("Cajón de " + jugadorBlanco + ":");
         ArrayList<String> cajonJugador1 = jugador1.MostrarCajonFichas();
         resultado.addAll(cajonJugador1);
-
         // Mostrar cajón de jugador2
         resultado.add("Cajón de " + jugadorBlanco + ":");
         ArrayList<String> cajonJugador2 = jugador2.MostrarCajonFichas();
         resultado.addAll(cajonJugador2);
-
         return resultado;
-
-
     }
 
-
-
-
-
-
-/*
-   public int CantidadFichasBarra(Jugador jugador){
-       jugador.Cantidad_Fichas_Barra();
-   }
-
-
-
- */
-
-
     public boolean HayfichasEnLaBarraDeColor(Jugador jugador, Color jugadorColor){
-
         return jugador.EstaEnBarra(jugadorColor);
     }
 
@@ -102,7 +89,6 @@ public class Modelo implements IObservable {
         for (Ficha Fbarra : barra) {
             //  System.out.println("Posición: " + Fbarra.getPosicion() + ", Modelo.Jugador: " + Fbarra.getJugador());
             notifyObservers("NOTIFICADOR: Posición: " + Fbarra.getPosicion() + ", Modelo.Jugador: " + Fbarra.getJugador());
-
         }
     }
 
@@ -128,36 +114,23 @@ public class Modelo implements IObservable {
      */
 
     public Jugador McambiarTurno() {
-
         notifyObservers("NOTIFICADOR: Se hizo un cambio de turno");
         return tablero.cambiarTurno();
     }
 
-    /*
-    public void MDibujarTablero(){
 
-        notifyObservers(tablero.dibujarTablero());
-    }
-
-     */
     public boolean hayMovimientosSeparados(Jugador jugador, int dado1, int dado2) {
         return tablero.HayMovimientosSeparados(jugador, dado1, dado2);
     }
-
     public int Lanzar_Dadoo(Jugador jugador, Dado dado){
         return jugador.Lanzar_Dado(dado);
     }
-
-
-
-
     public  boolean TodasFichasCajon(Jugador jugador){
         if (jugador.TodasFichasEnCajon()){
             notifyObservers("NOTIFICADOR: ¡JUGADOR:  " + jugador.getColor() + " HA GANADO!");
             return true;
         }
         return false;
-
     }
 
 
@@ -194,7 +167,6 @@ public class Modelo implements IObservable {
         return s;
     }
  */
-
     //FUNCIONA MOSTRAR EL TABLERO;
     public String llamarTablero(){
         String k;
@@ -203,36 +175,26 @@ public class Modelo implements IObservable {
         return k;
 
     }
-
-
-
     public void MDibujarTableroConsalo(){
             tablero.dibujarTablero();
     }
 
-
-
     public int[] PosicionTablero(){
        return tablero.getPosiciones();
     }
-
     @Override
     public void addObserver(IObserver observer) {
         observers.add(observer);
     }
-
     @Override
     public void removeObserver(IObserver observer) {
         observers.remove(observer);
     }
-
     @Override
     public void notifyObservers(String message) {
         for (IObserver observer : observers) {
             observer.update(message);
         }
     }
-
-
 
 }

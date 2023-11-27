@@ -16,12 +16,8 @@ public class Main {
         control.setVista(v);
         model.addObserver(v);
        // control.Jugar();
-
-
        String S= "3";
        int k = Integer.parseInt(S);
        System.out.println(k);
-
-
     }
 }
