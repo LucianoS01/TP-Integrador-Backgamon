@@ -32,10 +32,10 @@ public class Modelo implements IObservable {
         boolean b = tablero.RealizarMovimientos(jugador,origen,dado1, dado2, dado1 + dado2);
         if (b){
             if(jugador.getColor() == Color.BLANCAS){
-                notifyObservers("Movimiento exitoso desde el punto " + origen + " al punto "+ (origen - (dado1 + dado2)) + ".");
+                NotificadorObservable("Movimiento exitoso desde el punto " + origen + " al punto "+ (origen - (dado1 + dado2)) + ".");
             }
             else{
-                notifyObservers("Movimiento exitoso desde el punto " + origen + " al punto "+ (origen + (dado1 + dado2)) + ".");
+                NotificadorObservable("Movimiento exitoso desde el punto " + origen + " al punto "+ (origen + (dado1 + dado2)) + ".");
             }
 
         }
@@ -46,12 +46,12 @@ public class Modelo implements IObservable {
         boolean b = tablero.RealizarMovimientosSeparados(jugador, origen1, origen2, dado1, dado2);
         if (b){
             if(jugador.getColor() == Color.BLANCAS){
-                notifyObservers("Movimiento exitoso desde el punto " + origen1 + " al punto " + (origen1 - dado1) + ".");
-                notifyObservers("Movimiento exitoso desde el punto " + origen2 + " al punto " + (origen2 - dado2) + ".");
+                NotificadorObservable("Movimiento exitoso desde el punto " + origen1 + " al punto " + (origen1 - dado1) + ".");
+                NotificadorObservable("Movimiento exitoso desde el punto " + origen2 + " al punto " + (origen2 - dado2) + ".");
             }
             else {
-                notifyObservers("Movimiento exitoso desde el punto " + origen1 + " al punto " + (origen1 + dado1) + ".");
-                notifyObservers("Movimiento exitoso desde el punto " + origen2 + " al punto " + (origen2 + dado2) + ".");
+                NotificadorObservable("Movimiento exitoso desde el punto " + origen1 + " al punto " + (origen1 + dado1) + ".");
+                NotificadorObservable("Movimiento exitoso desde el punto " + origen2 + " al punto " + (origen2 + dado2) + ".");
             }
 
         }
@@ -85,10 +85,10 @@ public class Modelo implements IObservable {
 
     public void  MostrarFichasBarra(List<Ficha> barra) {
        // System.out.println("Fichas en la Barra:");
-        notifyObservers("NOTIFICADOR: Fichas en la barra " );
+        NotificadorObservable("NOTIFICADOR: Fichas en la barra " );
         for (Ficha Fbarra : barra) {
             //  System.out.println("Posición: " + Fbarra.getPosicion() + ", Modelo.Jugador: " + Fbarra.getJugador());
-            notifyObservers("NOTIFICADOR: Posición: " + Fbarra.getPosicion() + ", Modelo.Jugador: " + Fbarra.getJugador());
+            NotificadorObservable("NOTIFICADOR: Posición: " + Fbarra.getPosicion() + ", Modelo.Jugador: " + Fbarra.getJugador());
         }
     }
 
@@ -97,7 +97,7 @@ public class Modelo implements IObservable {
     }
 
     public Color Jcolor(Jugador jugadorTurno){
-        notifyObservers("NOTIFICADOR: Turno del jugador " + jugadorTurno.getColor());
+        NotificadorObservable("NOTIFICADOR: Turno del jugador " + jugadorTurno.getColor());
         return  jugadorTurno.getColor();
     }
 
@@ -114,7 +114,7 @@ public class Modelo implements IObservable {
      */
 
     public Jugador McambiarTurno() {
-        notifyObservers("NOTIFICADOR: Se hizo un cambio de turno");
+        NotificadorObservable("NOTIFICADOR: Se hizo un cambio de turno");
         return tablero.cambiarTurno();
     }
 
@@ -127,7 +127,7 @@ public class Modelo implements IObservable {
     }
     public  boolean TodasFichasCajon(Jugador jugador){
         if (jugador.TodasFichasEnCajon()){
-            notifyObservers("NOTIFICADOR: ¡JUGADOR:  " + jugador.getColor() + " HA GANADO!");
+            NotificadorObservable("NOTIFICADOR: ¡JUGADOR:  " + jugador.getColor() + " HA GANADO!");
             return true;
         }
         return false;
@@ -171,10 +171,10 @@ public class Modelo implements IObservable {
     public String llamarTablero(){
         String k;
         k = tablero.dibujarTableroo();
-        notifyObservers("Tablero: "+"\n" +  k);
+        NotificadorObservable("Tablero: "+"\n" +  k);
         return k;
-
     }
+
     public void MDibujarTableroConsalo(){
             tablero.dibujarTablero();
     }
@@ -182,18 +182,19 @@ public class Modelo implements IObservable {
     public int[] PosicionTablero(){
        return tablero.getPosiciones();
     }
+
     @Override
-    public void addObserver(IObserver observer) {
+    public void AgregarObservable(IObserver observer) {
         observers.add(observer);
     }
     @Override
-    public void removeObserver(IObserver observer) {
+    public void RemoverObservable(IObserver observer) {
         observers.remove(observer);
     }
     @Override
-    public void notifyObservers(String message) {
+    public void NotificadorObservable(String message) {
         for (IObserver observer : observers) {
-            observer.update(message);
+            observer.Actualizar(message);
         }
     }
 

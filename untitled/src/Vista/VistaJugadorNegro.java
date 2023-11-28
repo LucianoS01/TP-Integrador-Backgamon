@@ -63,7 +63,7 @@ public class VistaJugadorNegro extends JFrame implements IObserver {
     }
 
     @Override
-    public void update(String message) {
+    public void Actualizar(String message) {
         textArea.append(message + "\n");
 
         // Hacer que el scroll baje automáticamente

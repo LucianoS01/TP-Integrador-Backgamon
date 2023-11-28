@@ -98,12 +98,13 @@ public class Tablero {
                 // Verifica si hay una ficha del oponente en el destino.
                 if (PuedeComer(destino, jugador.getColor())) {
                     Ficha fichaAComer = null;
+                    Color ColorFicha = null;
                     int posicionFicha = 0;
                     for (Ficha f : fichas_del_Tablero) {
                         if (f.getPosicion() == destino) {
                             fichaAComer = f;
                             posicionFicha = fichaAComer.getPosicion();
-                            Color ColorFicha = fichaAComer.getJugador();
+                            ColorFicha = fichaAComer.getJugador();
                             break;
                         }
                     }
@@ -113,8 +114,8 @@ public class Tablero {
                     }
                     ficha.mover(dado1 + dado2);
                     //comio = true;
-                   // Comioo(fichaAComer.getJugador());
-                    System.out.println("Modelo.Ficha  " + posicionFicha + "Del jugador color " + fichaAComer.getJugador()  + " enviada a la barra.");
+                    //Comioo(ColorFicha);
+                    System.out.println("Modelo.Ficha  " + posicionFicha + "Del jugador color " + fichaAComer.getJugador() + " enviada a la barra.");
                 } else {
                     // Realiza el movimiento normal.
                     ficha.mover(dado1 + dado2);
@@ -152,49 +153,8 @@ public class Tablero {
 
 
 
-
-
-    public Color  Comioo(Color color){
+    public Color  Comioo (Color color){
         return color;
-    }
-
-    public void dibujarTablero2(){
-        char[][] tablero = new char[2][12];
-
-        // Inicializa el tablero con espacios en blanco
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 12; j++) {
-                tablero[i][j] = ' ';
-            }
-        }
-
-        // Coloca las fichas en el tablero
-        for (int i = 0; i < posiciones.length; i++) {
-            int fila = (i < 12) ? 0 : 1;
-            int columna = (fila == 0) ? i : 11 - (i - 12);
-
-            if (posiciones[i] > 0) {
-                // Fichas blancas
-                tablero[fila][columna] = 'B';
-            } else if (posiciones[i] < 0) {
-                // Fichas negras
-                tablero[fila][columna] = 'N';
-            }
-        }
-
-        // Muestra el tablero
-        System.out.println("===============================================");
-        System.out.println("        TABLERO DE BACKGAMMON");
-        System.out.println("===============================================");
-
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 12; j++) {
-                System.out.print("| " + tablero[i][j] + " ");
-            }
-            System.out.println("|");
-            System.out.println("-----------------------------------------------");
-        }
-        System.out.println(" 13  14  15  16  17  18  19  20  21  22  23  24");
     }
 
 
@@ -467,12 +427,21 @@ public class Tablero {
     }
 
 
+    //Calcula el destino pero con la suima de los 2 dados.
     public int calcularDestino(int origen, int dado1, int dado2, Color colorDelJugador) {
         int sumaDeDados = dado1 + dado2;
         if (colorDelJugador == Color.BLANCAS){
             return  origen - sumaDeDados;
         }else {
             return  origen + sumaDeDados;
+        }
+    }
+  //Calcula el destino con la 1 dado por separado.
+    public int calcularDestinoSeparados(int origen, int dado, Color colorDelJugador) {
+        if (colorDelJugador == Color.BLANCAS){
+            return  origen - dado;
+        }else {
+            return  origen + dado;
         }
     }
 
@@ -542,6 +511,7 @@ public class Tablero {
 
 
     public boolean RealizarMovimientosSeparados(Jugador jugador, int origen1, int origen2, int dado1, int dado2) {
+        boolean comio = false;
         Ficha ficha1 = null;
         Ficha ficha2 = null;
         // Busca las fichas en los puntos de origen.
@@ -560,8 +530,8 @@ public class Tablero {
                 System.out.println("La ficha seleccionada no pertenece al jugador actual.");
                 return false;
             }
-            int destino1 = calcularDestino(origen1, dado1, dado2, jugador.getColor());
-            int destino2 = calcularDestino(origen2, dado1, dado2, jugador.getColor());
+            int destino1 = calcularDestinoSeparados(origen1, dado1,  jugador.getColor());
+            int destino2 = calcularDestinoSeparados(origen2, dado2, jugador.getColor());
             // Verifica que ambos movimientos sean válidos.
             if (esMovimientoValido(jugador, origen1, destino1, dado1, dado2) && esMovimientoValido(jugador, origen2, destino2, dado1, dado2)) {
                 // Realiza los movimientos.
@@ -570,6 +540,7 @@ public class Tablero {
                 // Verifica si hay fichas del oponente en los destinos.
                 if (PuedeComer(destino1, jugador.getColor())) {
                     ComerFicha(destino1, jugador);
+
                 }
                 if (PuedeComer(destino2, jugador.getColor())) {
                     ComerFicha(destino2, jugador);

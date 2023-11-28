@@ -25,7 +25,7 @@ public class Vista extends JFrame implements IObserver {
     Jugador jugador;
     Dado dado;
 
-    private PrintStream outputPrintStream;
+
     public Vista(Controlador control) {
         this.controlador = control;
         initializeUI();
@@ -104,27 +104,34 @@ public class Vista extends JFrame implements IObserver {
     }
 
     //Elije una origen mediante de Imput.
-    public int obtenerOrigenDesdeInput() {
-        String input = JOptionPane.showInputDialog(this, "Ingrese el origen:");
+    public int obtenerOrigenDesdeInput(String Mensaje,int dado) {
+        String input = JOptionPane.showInputDialog(this, Mensaje," Dado : " + dado,JOptionPane.INFORMATION_MESSAGE);
         if (input != null && !input.isEmpty()) {
             try {
-                //hago un Scroll hacia abajo.
-                // Scroleo_haciaAbajo();
                 return Integer.parseInt(input);
             } catch (NumberFormatException e) {
                 mostrarError("Por favor, ingrese un número válido.");
-                //hago un Scroll hacia abajo.
-                // Scroleo_haciaAbajo();
             }
         } else {
             mostrarError("No se ingresó un origen válido.");
-            //hago un Scroll hacia abajo.
-            //Scroleo_haciaAbajo();
         }
-        //hago un Scroll hacia abajo.
-        //Scroleo_haciaAbajo();
         return -1; // Valor por defecto si hay un error
     }
+
+    public int obtenerOrigenDesdeInput_(String Mensaje,int dado) {
+        String input = JOptionPane.showInputDialog(this, Mensaje," la suma de los dos dados es : " + dado,JOptionPane.INFORMATION_MESSAGE);
+        if (input != null && !input.isEmpty()) {
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                mostrarError("Por favor, ingrese un número válido.");
+            }
+        } else {
+            mostrarError("No se ingresó un origen válido.");
+        }
+        return -1; // Valor por defecto si hay un error
+    }
+
 
 
 //Elije una opcion mediante de Imput.
@@ -146,13 +153,8 @@ public class Vista extends JFrame implements IObserver {
         return opcionSeleccionada;
     }
 
-
-
-
-
-
     @Override
-    public void update(String message) {
+    public void Actualizar(String message) {
         textArea.append(message + "\n");
 
         // Hacer que el scroll baje automáticamente
@@ -160,21 +162,6 @@ public class Vista extends JFrame implements IObserver {
         textArea.setCaretPosition(length);
         System.out.println("Vista actualizada: " + message);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     // Funciones adicionales según sea necesario
@@ -300,13 +287,6 @@ public class Vista extends JFrame implements IObserver {
                 mostrarError("No se ingresó un origen válido.");
             }
         }
-    }
-
-
-
-
-    public void setOutputPrintStream(PrintStream outputPrintStream) {
-        this.outputPrintStream = outputPrintStream;
     }
 
 

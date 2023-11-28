@@ -53,7 +53,6 @@ public class Controlador {
     public void LanzarDaditosY_Emxezar(){
         vista.mostrarMensaje("Turno del jugador " + jugadorTurno.getColor());
         modelo.turno();
-
         Dado dado = new Dado();
         int dado1 = 0;
         int dado2 = 0;
@@ -69,24 +68,22 @@ public class Controlador {
         vista.mostrarMensaje("El jugador : " + ColorDelJugadorTurno(jugadorTurno)  + ", Lanzo: " + dado1);
         vista.mostrarMensaje("El jugador : " + ColorDelJugadorTurno(jugadorTurno)  + ", Lanzo: " + dado2);
         vista.mostrarMensajeC("Dado 1: " + dado1 + ", Dado 2: " + dado2);
-      //  vista.mostrarMensaje("Dado 1: " + dado1 + ", Dado 2: " + dado2);
-
         int opcion = vista.elegirOpcion(ColorDelJugadorTurno(jugadorTurno) ,dado1,dado2);
         int origen;
-        if ((opcion == 1 ) || !modelo.hayMovimientosSeparados(jugadorTurno, dado1, dado2)) {
+        if ((opcion == 1 ) ) {
             vista.mostrarMensajeC("Origen: ");
             vista.mostrarMensaje("Origen: ");
-            origen = vista.obtenerOrigenDesdeInput();
+            origen = vista.obtenerOrigenDesdeInput_("Ingrese el Origen: ", (dado1  +dado2) ) ;
             vista.mostrarMensaje(" Se ha ingresador la poscion de origen : " + origen);
             int sumaDados = dado1 + dado2;
             movimientoExitoso = realizarMovimiento(jugadorTurno, origen, dado1, dado2);
         } else if (opcion == 2 )  {
            // vista.mostrarMensajeC("Origen Dado 1: ");
             vista.mostrarMensaje(" Ingrese el Origen  para el Dado 1: ");
-            int origenDado1 = vista.obtenerOrigenDesdeInput();
+            int origenDado1 = vista.obtenerOrigenDesdeInput(" Ingrese el Origen  para el Dado 1: ",dado1);
             vista.mostrarMensaje(" Se ha ingresador la poscion de origen : " + origenDado1);
             vista.mostrarMensaje(" Ingrese el Origen  para el Dado 2: ");
-            int origenDado2 = vista.obtenerOrigenDesdeInput();
+            int origenDado2 = vista.obtenerOrigenDesdeInput(" Ingrese el Origen  para el Dado 2: ",dado2);
             vista.mostrarMensaje(" Se ha ingresador la poscion de origen : " + origenDado2);
             movimientoExitoso = realizarMovimientosSeparados(jugadorTurno, origenDado1, origenDado2, dado1, dado2);
         } else {
@@ -102,6 +99,7 @@ public class Controlador {
         if (!movimientoExitoso) {
             vista.mostrarError("ERROR Movimiento inválido. Intenta de nuevo.");
             vista.mostrarErrorC("ERROR Movimiento inválido. Intenta de nuevo.");
+
         }
         else {
             modelo.MostrarFichasBarra(jugadorTurno.getBarra());
@@ -169,7 +167,7 @@ public class Controlador {
                     vista.mostrarMensajeC("Origen: ");
                     vista.mostrarMensaje("Origen: ");
                     cadena = vista.agregarTexto5();
-                    origen = vista.obtenerOrigenDesdeInput();
+                    origen = vista.obtenerOrigenDesdeInput_("Ingrese el Origen: ",dado1+dado2);
                     //hago un Scroll hacia abajo.
                  //   vista.Scroleo_haciaAbajo();
                     vista.mostrarMensaje(" Se ha ingresador la poscion de origen : " + origen);
@@ -179,15 +177,15 @@ public class Controlador {
                     vista.mostrarMensajeC("Origen Dado 1: ");
                     vista.mostrarMensaje(" Ingrese el Origen  para el Dado 1: ");
                     cadena = vista.agregarTexto5();
-                    int origenDado1 = vista.obtenerOrigenDesdeInput();
+                    int origenDado1 = vista.obtenerOrigenDesdeInput(" Ingrese el Origen  para el Dado 1: ",dado1);
                     //hago un Scroll hacia abajo.
                  //   vista.Scroleo_haciaAbajo();
                     vista.mostrarMensaje(" Se ha ingresador la poscion de origen : " + origenDado1);
                   //  vista.mostrarMensaje("Origen Dado 2: ");
                     cadena = vista.agregarTexto5();
                     vista.mostrarMensajeC("Origen Dado 2: ");
-                    vista.mostrarMensaje(" Ingrese el Origen  para el Dado 1: ");
-                    int origenDado2 = vista.obtenerOrigenDesdeInput();
+                    vista.mostrarMensaje(" Ingrese el Origen  para el Dado 2: ");
+                    int origenDado2 = vista.obtenerOrigenDesdeInput(" Ingrese el Origen  para el Dado 2: ",dado2);
                     //hago un Scroll hacia abajo.
                  //   vista.Scroleo_haciaAbajo();
                     vista.mostrarMensaje(" Se ha ingresador la poscion de origen : " + origenDado2);

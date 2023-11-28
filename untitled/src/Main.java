@@ -14,10 +14,8 @@ public class Main {
         Controlador control = new Controlador(model);
         Vista v = new  Vista(control);
         control.setVista(v);
-        model.addObserver(v);
+        model.AgregarObservable(v);
        // control.Jugar();
-       String S= "3";
-       int k = Integer.parseInt(S);
-       System.out.println(k);
+        //pato
     }
 }
