@@ -379,6 +379,7 @@ public class Tablero {
 
         return false;
     }
+
     public boolean esMovimientoValido(Jugador jugador, int origen,int destino,int dado1, int dado2) {
         // Verificar que el destino esté dentro del rango de puntos del tablero.
         if (origen < 0 || origen > 25) {
@@ -393,6 +394,7 @@ public class Tablero {
            System.out.println(" Error Ya pasaron las 5 Posiciones: ");
            return false;
        }
+
         int PosicionFinal;
         if (jugador.getColor() == Color.NEGRAS){
             PosicionFinal = origen + (dado1 + dado2);
@@ -406,7 +408,46 @@ public class Tablero {
             return false;
         }
         // Si todas las validaciones pasan, el movimiento es válido.
+
+
+
     }
+
+    //Es movimiento valido para serpadados
+    public boolean esMovimientoValido_paraSeparados(Jugador jugador, int origen,int destino) {
+        // Verificar que el destino esté dentro del rango de puntos del tablero.
+        if (origen < 0 || origen > 25) {
+            return false;
+        }
+        if (CasilleroOcupado(destino,jugador.getColor())){
+            System.out.println("El casillero esta ocupadito  por el rivarl: ");
+            return false;
+        }
+        //Mayor a 5 posiciones;
+        if ( MayoyA5Posiciones(destino,jugador.getColor())){
+            System.out.println(" Error Ya pasaron las 5 Posiciones: ");
+            return false;
+        }
+
+        int PosicionFinal;
+        if (jugador.getColor() == Color.NEGRAS){
+            PosicionFinal = destino;
+        }else {
+            PosicionFinal = destino;
+        }
+
+        if (movimiento_Valido(PosicionFinal)){
+            return true;
+        }
+        else{
+            return false;
+        }
+        // Si todas las validaciones pasan, el movimiento es válido.
+
+
+
+    }
+
 
     private boolean movimiento_Valido(int PosicionFinal){
         return PosicionFinal >= 0 && PosicionFinal <= 25;
@@ -464,50 +505,7 @@ public class Tablero {
         return false;
     }
 
-    /*
-    public boolean RealizarMovimientosSeparados(Jugador jugador, int origen1, int origen2, int dado1, int dado2) {
-        Ficha ficha1 = null;
-        Ficha ficha2 = null;
 
-        // Busca las fichas en los puntos de origen.
-        for (Ficha f : fichas_del_Tablero) {
-            if (f.getPosicion() == origen1) {
-                ficha1 = f;
-            } else if (f.getPosicion() == origen2) {
-                ficha2 = f;
-            }
-        }
-
-        // Verifica si las fichas existen y si los movimientos son válidos.
-        if (ficha1 != null && ficha2 != null) {
-            int destino1 = calcularDestino(origen1, dado1, dado2, jugador.getColor());
-            int destino2 = calcularDestino(origen2, dado1, dado2, jugador.getColor());
-
-            // Verifica que ambos movimientos sean válidos.
-            if (esMovimientoValido(jugador, origen1, destino1, dado1, dado2) && esMovimientoValido(jugador, origen2, destino2, dado1, dado2)) {
-                // Realiza los movimientos.
-                ficha1.mover(dado1);
-                ficha2.mover(dado2);
-
-                // Muestra información sobre los movimientos realizados.
-                System.out.println("Movimiento exitoso desde el punto " + origen1 + " al punto " + ficha1.getPosicion() + ".");
-                System.out.println("Movimiento exitoso desde el punto " + origen2 + " al punto " + ficha2.getPosicion() + ".");
-
-
-
-                return true;
-            } else {
-                System.out.println("Movimientos inválidos desde los puntos " + origen1 + " y " + origen2 + ".");
-                return false;
-            }
-        } else {
-            System.out.println("No se encontraron fichas en los puntos de origen " + origen1 + " y/o " + origen2 + ".");
-            return false;
-        }
-    }
-
-
-     */
 
 
     public boolean RealizarMovimientosSeparados(Jugador jugador, int origen1, int origen2, int dado1, int dado2) {
@@ -533,7 +531,7 @@ public class Tablero {
             int destino1 = calcularDestinoSeparados(origen1, dado1,  jugador.getColor());
             int destino2 = calcularDestinoSeparados(origen2, dado2, jugador.getColor());
             // Verifica que ambos movimientos sean válidos.
-            if (esMovimientoValido(jugador, origen1, destino1, dado1, dado2) && esMovimientoValido(jugador, origen2, destino2, dado1, dado2)) {
+            if (esMovimientoValido_paraSeparados(jugador, origen1, destino1) && esMovimientoValido_paraSeparados(jugador, origen2, destino2)) {
                 // Realiza los movimientos.
                 ficha1.mover(dado1);
                 ficha2.mover(dado2);

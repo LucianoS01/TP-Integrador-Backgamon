@@ -15,7 +15,5 @@ public class Main {
         Vista v = new  Vista(control);
         control.setVista(v);
         model.AgregarObservable(v);
-       // control.Jugar();
-        //pato
     }
 }

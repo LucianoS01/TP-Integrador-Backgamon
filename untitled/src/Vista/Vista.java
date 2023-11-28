@@ -174,40 +174,6 @@ public class Vista extends JFrame implements IObserver {
         }
         return textoIngresado;
     }
-    public String agregarTexto() {
-        String textoIngresado = textField.getText();
-        textArea.append("Texto ingresado: " + textoIngresado + "\n");
-        textField.setText("");
-        return textoIngresado;
-    }
-
-    public int obtenerOrigenDesdeTextField() {
-        String textoIngresado = textField.getText();
-        if (!textoIngresado.isEmpty()) {
-            try {
-                int origen = Integer.parseInt(textoIngresado);
-                return origen;
-            } catch (NumberFormatException e) {
-                // Si hay un error al convertir, muestra un mensaje de error.
-                JOptionPane.showMessageDialog(this, "Error: Ingrese un número entero válido.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            // Muestra un mensaje de error si no se ingresó ningún texto.
-            JOptionPane.showMessageDialog(this, "Error: No se ingresó un origen válido.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        return -1; // Valor por defecto si hay un error
-    }
-
-    public int agregarTexto3() {
-        String textoIngresado = textField.getText();
-        int numero = 49;
-        numero = Integer.parseInt(textoIngresado);
-        // Limpia el campo de texto después de agregar el número.
-        textField.setText("");
-        return numero;
-    }
-
-
 
 
     public void Bienvenida(){
